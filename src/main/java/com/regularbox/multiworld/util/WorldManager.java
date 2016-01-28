@@ -48,7 +48,7 @@ public class WorldManager {
                         new Config(path.toString()));
             }
         } catch(IOException e) {
-            plugin.getLogger().critical("Failed to load a permissions file!");
+            plugin.getLogger().critical("Failed to load a world file!");
             e.printStackTrace();
         }
 
