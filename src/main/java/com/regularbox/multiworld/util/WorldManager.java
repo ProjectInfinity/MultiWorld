@@ -5,10 +5,8 @@ import cn.nukkit.utils.Config;
 import com.regularbox.multiworld.MultiWorld;
 
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,6 +82,43 @@ public class WorldManager {
         world.set("name", name);
         world.save();
         this.worldFiles.put(name, world);
+    }
+
+    public boolean deleteWorld(String world) {
+        if(!this.worldFiles.containsKey(world)) return false;
+        this.worldFiles.remove(world);
+
+        Level level = plugin.getServer().getLevelByName(world);
+        if(level == null) return false;
+        /**
+         * TODO: Fix NPE in Nukkit on server shutdown when a world has been unloaded.
+         */
+        plugin.getServer().unloadLevel(level);
+
+        try {
+            // Get rid of MultiWorld world.yml.
+            Files.deleteIfExists(Paths.get(plugin.getDataFolder().getPath(), "/worlds/", world + ".yml"));
+            // Recursively get rid of world folder in Nukkit/worlds.
+            Files.walkFileTree(Paths.get(plugin.getServer().getFilePath(), "/worlds/", world), new SimpleFileVisitor<Path>() {
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public void saveToDisk() {
