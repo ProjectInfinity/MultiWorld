@@ -70,5 +70,24 @@ public class WorldManager {
 
     }
 
+    /**
+     * Creates a world file and stores it in the world map.
+     *
+     * @param name Name of world
+     */
+    public void createWorld(String name) {
+        // TODO: Add support for metadata.
+        // This shouldn't really happen... But let's check for it anyway.
+        if(this.worldFiles.containsKey(name)) return;
+        plugin.saveResource("world.yml", "worlds/" + name + ".yml", false);
+        Config world = new Config(plugin.getDataFolder().getPath() + "/worlds/" + name + ".yml");
+        world.set("name", name);
+        world.save();
+        this.worldFiles.put(name, world);
+    }
+
+    public void saveToDisk() {
+        this.worldFiles.values().forEach(Config::save);
+    }
 
 }

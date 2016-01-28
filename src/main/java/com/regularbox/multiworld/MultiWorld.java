@@ -19,7 +19,7 @@ public class MultiWorld extends PluginBase {
 
     @Override
     public void onDisable() {
-
+        this.worldManager.saveToDisk();
     }
 
     public static MultiWorld getPlugin() {

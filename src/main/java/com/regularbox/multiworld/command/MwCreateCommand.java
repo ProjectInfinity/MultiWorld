@@ -27,6 +27,8 @@ public class MwCreateCommand extends Command {
             return true;
         }
 
+        // TODO: Add metadata options.
+
         String name = args[0];
 
         if(plugin.getServer().isLevelGenerated(name)) {
@@ -34,7 +36,13 @@ public class MwCreateCommand extends Command {
             return true;
         }
 
-        plugin.getServer().generateLevel(name);
+        if(plugin.getServer().generateLevel(name)) {
+            // Create world file now.
+            plugin.getWorldManager().createWorld(name);
+            sender.sendMessage(TextFormat.GREEN + "Successfully generated " + name);
+        } else {
+            sender.sendMessage(TextFormat.RED + "Failed to generate " + name);
+        }
 
         return true;
 
