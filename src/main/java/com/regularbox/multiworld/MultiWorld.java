@@ -3,6 +3,7 @@ package com.regularbox.multiworld;
 import cn.nukkit.plugin.PluginBase;
 import com.regularbox.multiworld.command.MwCreateCommand;
 import com.regularbox.multiworld.command.MwDeleteCommand;
+import com.regularbox.multiworld.command.MwListCommand;
 import com.regularbox.multiworld.util.WorldManager;
 
 public class MultiWorld extends PluginBase {
@@ -17,6 +18,7 @@ public class MultiWorld extends PluginBase {
         this.worldManager = new WorldManager(plugin);
         getServer().getCommandMap().register("mwcreate", new MwCreateCommand(plugin));
         getServer().getCommandMap().register("mwdelete", new MwDeleteCommand(plugin));
+        getServer().getCommandMap().register("mwlist", new MwListCommand(plugin));
     }
 
     @Override

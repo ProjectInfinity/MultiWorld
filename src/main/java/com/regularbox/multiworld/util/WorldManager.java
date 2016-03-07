@@ -9,6 +9,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class WorldManager {
 
@@ -119,6 +120,10 @@ public class WorldManager {
             return false;
         }
         return true;
+    }
+
+    public Set<String> getWorlds() {
+        return this.worldFiles.keySet();
     }
 
     public void saveToDisk() {
