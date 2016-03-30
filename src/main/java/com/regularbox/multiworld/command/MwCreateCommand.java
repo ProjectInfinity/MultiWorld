@@ -10,7 +10,7 @@ public class MwCreateCommand extends Command {
     private MultiWorld plugin;
 
     public MwCreateCommand(MultiWorld plugin) {
-        super("mwcreate", "Creates a world with the specified settings.", "/mwcreate [name] [options]");
+        super("mwcreate", "Creates a world with the specified settings.", "/mwcreate [name] [seed] [options]");
         this.plugin = plugin;
     }
 
@@ -30,13 +30,16 @@ public class MwCreateCommand extends Command {
         // TODO: Add metadata options.
 
         String name = args[0];
+        long seed = args.length > 1 ? args[1].hashCode() : -1;
 
         if(plugin.getServer().isLevelGenerated(name)) {
             sender.sendMessage(TextFormat.RED + "A world with that name already exists.");
             return true;
         }
 
-        if(plugin.getServer().generateLevel(name)) {
+        boolean result = seed != -1 ? plugin.getServer().generateLevel(name, seed) : plugin.getServer().generateLevel(name);
+
+        if(result) {
             // Create world file now.
             plugin.getWorldManager().createWorld(name);
             sender.sendMessage(TextFormat.GREEN + "Successfully generated " + name);
